@@ -18,13 +18,19 @@ void createFile()
     system("clear");
     printf("--Create File--\n");
     printf("touch ");
-    scanf("%s", &userFile);
+    scanf("%s", userFile);
 
     // create path to document folder
+    strcpy(path, "Documents/");
     strcat(path, userFile);
 
     // allows operator permissions to user
     masterFile = open(path, O_CREAT | O_RDWR, 00700);
+
+    if(masterFile == -1){
+        printf("error opening file");
+        return;
+    }
     close(masterFile);
     printf("Saved to Documents\n");
 }
@@ -39,7 +45,12 @@ void deleteFile()
     scanf("%s", &delFile);
 
     //create path to document folder
+    strcpy(path, "Documents/");
     strcat(path, delFile);
+
+    //delete document
+    unlink(path);
+    
 }
 
 int main()
@@ -58,7 +69,6 @@ int main()
             "(3) List files\n"
             "(4) Read file\n"
             "Enter your choice: ");
-
         // user input
         scanf("%d", &inp);
 
@@ -71,9 +81,11 @@ int main()
         // create case
         case 1:
             createFile();
+            break;
         // delete case
         case 2:
             deleteFile();
+            break;
         // list case
         case 3:
 
