@@ -3,11 +3,15 @@
 #include <fcntl.h>  //open()
 #include <stdlib.h> //system() (for clearing cli)
 #include <string.h> //need this so bad for nothing but aesthetics
-#include <unistd.h> //close()
+#include <unistd.h> //close() unlink()
+
+// global variables
+int masterFile;
+char path[300] = "Documents/";
 
 void createFile()
 {
-    int masterFile;
+
     char userFile[100];
 
     // linux "touch" sim
@@ -16,20 +20,26 @@ void createFile()
     printf("touch ");
     scanf("%s", &userFile);
 
-    // save to "Documents" folder
-    char path[300] = "Documents/";
+    // create path to document folder
     strcat(path, userFile);
-    printf("Saved to Documents\n");
 
     // allows operator permissions to user
     masterFile = open(path, O_CREAT | O_RDWR, 00700);
     close(masterFile);
+    printf("Saved to Documents\n");
 }
 
 void deleteFile()
 {
+    char delFile[100];
+
     system("clear");
     printf("--Delete File--\n");
+    printf("rm ");
+    scanf("%s", &delFile);
+
+    //create path to document folder
+    strcat(path, delFile);
 }
 
 int main()
@@ -63,7 +73,7 @@ int main()
             createFile();
         // delete case
         case 2:
-
+            deleteFile();
         // list case
         case 3:
 
