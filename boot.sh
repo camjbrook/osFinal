@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # =============================================================
-#  boot.sh — CSCI 3431 OS Final Project
+#  boot.sh
 #  Cleans /bin and /logs, recreates them, compiles all modules
 # =============================================================
 
@@ -25,15 +25,9 @@ echo -e "${NC}"
 # STEP 1 — Clean and recreate project directories
 # -------------------------------------------------------------
 echo -e "${YELLOW}[BOOT] Setting up project directories...${NC}"
-
-# Clean old bin and logs
-rm -rf bin logs
-
-# Recreate required directories
-mkdir -p src bin logs
-
-echo -e "${GREEN}[OK]   Directories ready: src/ bin/ logs/${NC}"
-echo ""
+rm -rf bin logs tmp
+rm -f /tmp/logger_fifo
+mkdir -p bin logs tmp bin/Documents
 
 # -------------------------------------------------------------
 # STEP 2 — Check that all source files exist

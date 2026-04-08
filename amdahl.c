@@ -1,8 +1,8 @@
 #include <stdio.h>
-#include <fcntl.h>      // open
-#include <unistd.h>     // write, close
-#include <string.h>     // strlen
-#include <stdlib.h>     // exit
+#include <fcntl.h>  // open
+#include <unistd.h> // write, close
+#include <string.h> // strlen
+#include <stdlib.h> // exit
 
 /*
     Module 5 - Amdahl's Law
@@ -16,21 +16,17 @@
 */
 
 /* ---------- LOGGER ---------- */
+/* ... (existing includes) ... */
 void sendLogMessage(const char *logMessage)
 {
     const char *loggerFifoPath = "/tmp/logger_fifo";
-
-    int fifoFileDescriptor = open(loggerFifoPath, O_WRONLY | O_NONBLOCK);
-
-    if (fifoFileDescriptor == -1)
+    int fd = open(loggerFifoPath, O_WRONLY | O_NONBLOCK);
+    if (fd != -1)
     {
-        perror("Failed to open logger FIFO");
-        return;
+        write(fd, logMessage, strlen(logMessage));
+        write(fd, "\n", 1);
+        close(fd);
     }
-
-    write(fifoFileDescriptor, logMessage, strlen(logMessage));
-    write(fifoFileDescriptor, "\n", 1);   // add newline so logger formats nicely
-    close(fifoFileDescriptor);
 }
 
 /*

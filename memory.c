@@ -17,20 +17,16 @@ typedef struct
 } MemoryBlock;
 
 /* ---------- LOGGER ---------- */
+/* ... (existing defines and structs) ... */
 void sendLogMessage(const char *logMessage)
 {
     const char *loggerFifoPath = "/tmp/logger_fifo";
-
-    int fifoFileDescriptor = open(loggerFifoPath, O_WRONLY | O_NONBLOCK);
-
-    if (fifoFileDescriptor == -1)
+    int fd = open(loggerFifoPath, O_WRONLY | O_NONBLOCK);
+    if (fd != -1)
     {
-        perror("Failed to open logger FIFO");
-        return;
+        write(fd, logMessage, strlen(logMessage));
+        close(fd);
     }
-
-    write(fifoFileDescriptor, logMessage, strlen(logMessage));
-    close(fifoFileDescriptor);
 }
 
 /* ---------- MEMORY MANAGEMENT ---------- */

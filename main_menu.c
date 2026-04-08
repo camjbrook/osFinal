@@ -34,10 +34,10 @@ void launchModule(char *path)
 int main()
 {
     int inp;
-    system("clear");
     while (1)
     {
-        printf("--OS Final Project -- Main Menu--\n\n");
+        system("clear");
+        printf("--GPT OS--\n\n");
         printf(
             "Options:\n"
             "(0) Exit\n"
@@ -45,7 +45,7 @@ int main()
             "(2) Peterson's Solution\n"
             "(3) File Management\n"
             "(4) Memory Allocation\n"
-            "(5) Amdahl's Law\n\n"
+            "(5) Amdahl's Law\n"
             "Enter your choice: ");
 
         if (scanf("%d", &inp) != 1)

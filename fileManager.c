@@ -5,6 +5,20 @@
 #include <string.h> //need this so bad for nothing but aesthetics
 #include <unistd.h> //close() unlink()
 #include <dirent.h> //directory search
+#include <sys/stat.h>
+
+/* ... (existing includes) ... */
+void sendLogMessage(const char *logMessage)
+{
+    const char *loggerFifoPath = "/tmp/logger_fifo";
+    int fd = open(loggerFifoPath, O_WRONLY | O_NONBLOCK);
+    if (fd != -1)
+    {
+        write(fd, logMessage, strlen(logMessage));
+        write(fd, "\n", 1);
+        close(fd);
+    }
+}
 
 // global variables
 int masterFile;
@@ -35,6 +49,7 @@ void createFile()
 
     close(masterFile);
     printf("Saved to Documents\n");
+    sendLogMessage("FileManager: Created file");
 }
 
 void deleteFile()
@@ -52,6 +67,7 @@ void deleteFile()
 
     // delete document
     unlink(path);
+    sendLogMessage("FileManager: Deleted file");
 }
 
 void listFile()
@@ -60,6 +76,7 @@ void listFile()
     struct dirent *entry;
 
     dir = opendir("./Documents"); // open current directory
+    sendLogMessage("FileManager: Listed files");
     if (dir == NULL)
     {
         perror("opendir failed");
@@ -153,10 +170,13 @@ void readFiles()
     while (getchar() != '\n')
         ;
     getchar();
+
+    sendLogMessage("FileManager: Read file");
 }
 
 int main()
 {
+    sendLogMessage("FileManager: Module started");
     while (1)
     {
         int inp;
@@ -178,7 +198,11 @@ int main()
         {
         // exit case
         case 0:
-            printf("exiting...\n");
+            sendLogMessage("FileManager: Module exited");
+            printf("\nPress Enter to exit...");
+            while (getchar() != '\n')
+                ;
+            getchar();
             return 0;
         // create case
         case 1:
@@ -199,5 +223,4 @@ int main()
             break;
         }
     }
-    return 0;
 }

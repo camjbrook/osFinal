@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
-#include <fcntl.h>      // open
-#include <string.h>     // strlen
-#include <stdlib.h>     // exit
+#include <fcntl.h>  // open
+#include <string.h> // strlen
+#include <stdlib.h> // exit
 
 /*
     Peterson's Solution (Synchronization)
@@ -33,18 +33,17 @@ const char *loggerFifoFilePath = "/tmp/logger_fifo";
     The logger program will receive this message, add a timestamp,
     and write it into logs.txt.
 */
-void send_log_message(const char *message) {
-    int fifoWriteFileDescriptor = open(loggerFifoFilePath, O_WRONLY);
 
-    if (fifoWriteFileDescriptor == -1) {
-        perror("Peterson Error: Failed to open logger FIFO");
-        return;
+
+void send_log_message(const char *message)
+{
+    int fd = open(loggerFifoFilePath, O_WRONLY);
+    if (fd != -1)
+    {
+        write(fd, message, strlen(message));
+        write(fd, "\n", 1);
+        close(fd);
     }
-
-    write(fifoWriteFileDescriptor, message, strlen(message));
-    write(fifoWriteFileDescriptor, "\n", 1);
-
-    close(fifoWriteFileDescriptor);
 }
 
 /*
@@ -55,13 +54,15 @@ void send_log_message(const char *message) {
     id = 0 for process 0
     id = 1 for process 1
 */
-void *process(void *arg) {
+void *process(void *arg)
+{
     int id = *(int *)arg;
     int other = 1 - id;
 
     char logMessage[200];
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++)
+    {
 
         /* ================= ENTRY SECTION ================= */
         printf("Process %d: Entry section\n", id);
@@ -77,7 +78,8 @@ void *process(void *arg) {
         turn = other;
 
         /* Busy-wait until it is safe to enter */
-        while (flag[other] && turn == other) {
+        while (flag[other] && turn == other)
+        {
             /* do nothing - just wait */
         }
 
@@ -96,7 +98,7 @@ void *process(void *arg) {
         printf("Process %d: reads shared_value = %d\n", id, temp);
 
         temp++;
-        usleep(100000);   // small pause so output is easier to see
+        usleep(100000); // small pause so output is easier to see
 
         shared_value = temp;
         printf("Process %d: updates shared_value to %d\n", id, shared_value);
@@ -118,7 +120,8 @@ void *process(void *arg) {
     return NULL;
 }
 
-int main() {
+int main()
+{
     pthread_t t0, t1;
     int id0 = 0;
     int id1 = 1;
