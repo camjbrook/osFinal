@@ -1,4 +1,4 @@
-//@camjbrook
+//@camjbrook A00473064
 #include <stdio.h>
 #include <fcntl.h>  //open()
 #include <stdlib.h> //system() (for clearing cli)
@@ -29,7 +29,7 @@ void createFile()
 
     if (masterFile == -1)
     {
-        printf("error opening file");
+        printf("error opening file\n");
         return;
     }
 
@@ -44,7 +44,7 @@ void deleteFile()
     system("clear");
     printf("--Delete File--\n");
     printf("rm ");
-    scanf("%s", &delFile);
+    scanf("%s", delFile);
 
     // create path to document folder
     strcpy(path, "Documents/");
@@ -161,8 +161,8 @@ int main()
     {
         int inp;
         // main menu
-
-        printf("--File Manager Sim--\n");
+        system("clear");
+        printf("--File Manager Sim--\n\n");
         printf(
             "Options:\n"
             "(0) Exit\n"
